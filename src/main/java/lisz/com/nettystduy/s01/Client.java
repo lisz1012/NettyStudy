@@ -14,14 +14,16 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.CharsetUtil;
 
 /**
- * Hello world!
+ * Hello Netty!
  *
  */
 public class Client {
     public static void main( String[] args ) {
-        EventLoopGroup workers = new NioEventLoopGroup(); // 其实就是个线程池
+    	// 其实就是个线程池,  传个参数1，默认是核数*2个线程，没必要。线程池用来处理整个Channel上的所有事件，如b.connect()
+    	// 以及read，都是线程池里出一个线程帮着连接或者读取
+        EventLoopGroup workers = new NioEventLoopGroup(1); 
         Bootstrap b = new Bootstrap(); // “解靴带”理解为一个辅助启动的类就行了
-        b.group(workers)
+        b.group(workers) // 工厂方法，把线程池设置进来
          .channel(NioSocketChannel.class)
          .handler(new ChannelInitializer<SocketChannel>() {
 			@Override

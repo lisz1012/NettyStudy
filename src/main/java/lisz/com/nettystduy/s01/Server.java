@@ -16,7 +16,7 @@ import io.netty.util.CharsetUtil;
 public class Server {
 
 	public static void main(String[] args) {
-		EventLoopGroup bossGroup = new NioEventLoopGroup();
+		EventLoopGroup bossGroup = new NioEventLoopGroup(); // 其实就是两个线程池
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		ServerBootstrap b = new ServerBootstrap();
 		b.group(bossGroup, workerGroup)
@@ -33,9 +33,11 @@ public class Server {
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			bossGroup.shutdownGracefully();
+			workerGroup.shutdownGracefully();
 		}
-		bossGroup.shutdownGracefully();
-		workerGroup.shutdownGracefully();
+		
 	}
 
 	private static final class ServerHandler extends ChannelInboundHandlerAdapter {

@@ -19,7 +19,7 @@ import io.netty.util.CharsetUtil;
  */
 public class Client {
     public static void main( String[] args ) {
-        EventLoopGroup workers = new NioEventLoopGroup();
+        EventLoopGroup workers = new NioEventLoopGroup(); // 其实就是个线程池
         Bootstrap b = new Bootstrap(); // “解靴带”理解为一个辅助启动的类就行了
         b.group(workers)
          .channel(NioSocketChannel.class)
@@ -34,8 +34,9 @@ public class Client {
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			workers.shutdownGracefully();
 		}
-        workers.shutdownGracefully();
     }
     
     private static final class MyHandler extends ChannelInboundHandlerAdapter {

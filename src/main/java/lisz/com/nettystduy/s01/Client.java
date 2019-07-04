@@ -53,7 +53,7 @@ public class Client {
     	@Override
     	public void channelActive(ChannelHandlerContext ctx) throws Exception {
     		final ChannelFuture f = ctx.writeAndFlush(Unpooled.copiedBuffer("Hello server".getBytes()));
-    		f.addListener(new ChannelFutureListener() {// 如果future已经结束了，则钩子方法立刻就会被调用
+    		f.addListener(new ChannelFutureListener() {// 如果future已经结束了，则钩子方法立刻就会被调用,对connect的成功或失败进行处理
     			@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
 					if (future.isSuccess()) {

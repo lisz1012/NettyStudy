@@ -1,3 +1,8 @@
+/**
+ * Netty是基于事件模型的，事件发生之后怎么处理，写这部分的逻辑代码就行了，用户可以更关注与业务
+ * Netty里的所有方法都是异步方法，执行就是用别的线程干活，然后自己干别的去了，要想等着它执行完
+ * 在做某些事，要调用一下sync()
+ */
 package lisz.com.nettystduy.s01;
 
 import io.netty.bootstrap.Bootstrap;
@@ -24,15 +29,15 @@ public class Client {
         EventLoopGroup workers = new NioEventLoopGroup(1); 
         Bootstrap b = new Bootstrap(); // “解靴带”理解为一个辅助启动的类就行了
         b.group(workers) // 工厂方法，把线程池设置进来, 以后任何事件都交给里面的线程处理
-         .channel(NioSocketChannel.class)
-         .handler(new ChannelInitializer<SocketChannel>() {
+         .channel(NioSocketChannel.class) // 这里换成 SocketChannel就成了BIO，阻塞版
+         .handler(new ChannelInitializer<SocketChannel>() { // ChannelInitializer是channel做初始化用的，初始化的时候添加handler
 			@Override
-			protected void initChannel(SocketChannel ch) throws Exception {
+			protected void initChannel(SocketChannel ch) throws Exception { // channel连上去之后会调用initChannel
 				ch.pipeline().addLast(new MyHandler());
 			}
 		});
         try {
-			ChannelFuture f = b.connect("127.0.0.1", 8888).sync();
+			ChannelFuture f = b.connect("127.0.0.1", 8888).sync(); // 这个connect是个异步方法，sync()表示connect得执行完成了才可以往下走
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

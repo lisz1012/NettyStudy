@@ -32,7 +32,7 @@ public class Client {
         Bootstrap b = new Bootstrap(); // “解靴带”理解为一个辅助启动的类就行了
         b.group(workers) // 工厂方法，把线程池设置进来, 以后任何事件都交给里面的线程处理
          .channel(NioSocketChannel.class) // 这里换成 SocketChannel就成了BIO，阻塞版
-         .handler(new ChannelInitializer<SocketChannel>() { // ChannelInitializer是channel做初始化用的，初始化的时候添加handler
+         .handler(new ChannelInitializer<SocketChannel>() { // ChannelInitializer是channel做初始化用的，初始化的时候添加handler,调用了connect之后才初始化，才会initChannel
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception { // channel连上去之后会调用initChannel
 				ch.pipeline().addLast(new MyHandler());
@@ -53,8 +53,8 @@ public class Client {
     	@Override
     	public void channelActive(ChannelHandlerContext ctx) throws Exception {
     		final ChannelFuture f = ctx.writeAndFlush(Unpooled.copiedBuffer("Hello server".getBytes()));
-    		f.addListener(new ChannelFutureListener() {
-				@Override
+    		f.addListener(new ChannelFutureListener() {// 如果future已经结束了，则钩子方法立刻就会被调用
+    			@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
 					if (future.isSuccess()) {
 						System.out.println("Client successfully wrote to server");
@@ -62,7 +62,7 @@ public class Client {
 						System.out.println("Client connect to server failed");
 					}
 				}           
-			});//.addListener(ChannelFutureListener.CLOSE); //长连接变短连接,但这里有这句会报异常，因为server还会尝试往这里写数据呢
+			}).sync();//.addListener(ChannelFutureListener.CLOSE); //长连接变短连接,但这里有这句会报异常，因为server还会尝试往这里写数据呢
     	}
     	
     	@Override

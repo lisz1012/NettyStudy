@@ -1,14 +1,16 @@
 /**
  * Netty是基于事件模型的，事件发生之后怎么处理，写这部分的逻辑代码就行了，用户可以更关注与业务
  * Netty里的所有方法都是异步方法，执行就是用别的线程干活，然后自己干别的去了，要想等着它执行完
- * 在做某些事，要调用一下sync()
+ * 在做某些事，要调用一下sync()，这是一个ChannelFuture的方法
  */
 package lisz.com.nettystduy.s01;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
@@ -50,7 +52,17 @@ public class Client {
     	
     	@Override
     	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-    		ctx.writeAndFlush(Unpooled.copiedBuffer("Hello server".getBytes()));
+    		final ChannelFuture f = ctx.writeAndFlush(Unpooled.copiedBuffer("Hello server".getBytes()));
+    		f.addListener(new ChannelFutureListener() {
+				@Override
+				public void operationComplete(ChannelFuture future) throws Exception {
+					if (future.isSuccess()) {
+						System.out.println("Client successfully wrote to server");
+					} else {
+						System.out.println("Client connect to server failed");
+					}
+				}           
+			});//.addListener(ChannelFutureListener.CLOSE); //长连接变短连接,但这里有这句会报异常，因为server还会尝试往这里写数据呢
     	}
     	
     	@Override
@@ -71,4 +83,8 @@ public class Client {
     		System.out.println("Server is offline!");
     	}
     }
+    /* 打印，先连接然后读取server写过来的消息
+     * Client successfully wrote to server
+	   Hello client!!!
+     */
 }

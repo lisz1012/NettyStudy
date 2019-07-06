@@ -21,28 +21,28 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class ClientFrame extends Frame {
 	private static final long serialVersionUID = 8851447650164397784L;
-	public static final TextArea TEXT_AREA = new TextArea();
-	public static final TextField TEXT_FIELD = new TextField();
+	private TextArea textArea = new TextArea();
+	private TextField textField = new TextField();
 	public static String id;
 	private EventLoopGroup workers = new NioEventLoopGroup(1);
 	private Bootstrap b = new Bootstrap();
-	private ChannelInitializer<SocketChannel> channelInitializer = new ClientChannelInitializer();
+	private ChannelInitializer<SocketChannel> channelInitializer;
 	private ChannelFuture f;
 	//public static final ClientFrame INSTANCE = new ClientFrame(); 
 	
 	public ClientFrame() {
 		setSize(370, 470);
 		setLocation(100, 20);
-		add(TEXT_AREA, BorderLayout.CENTER);
-		add(TEXT_FIELD, BorderLayout.SOUTH);
-		TEXT_AREA.setEditable(false);
-		TEXT_FIELD.addActionListener(new ActionListener() { // ActionListener在回车的时候会触发下面actionPerformed里面的语句
+		add(textArea, BorderLayout.CENTER);
+		add(textField, BorderLayout.SOUTH);
+		textArea.setEditable(false);
+		textField.addActionListener(new ActionListener() { // ActionListener在回车的时候会触发下面actionPerformed里面的语句
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ByteBuf buf = Unpooled.copiedBuffer(("[" + ClientFrame.id + "]: " + TEXT_FIELD.getText()).getBytes());
+				ByteBuf buf = Unpooled.copiedBuffer(("[" + ClientFrame.id + "]: " + textField.getText()).getBytes());
 				f.channel().writeAndFlush(buf);
-				TEXT_AREA.setText(TEXT_AREA.getText() + "\n[" + id + "]: " + TEXT_FIELD.getText());
-				TEXT_FIELD.setText("");
+				textArea.setText(textArea.getText() + "\n[" + id + "]: " + textField.getText());
+				textField.setText("");
 			}
 		});
 		setVisible(true);
@@ -56,6 +56,9 @@ public class ClientFrame extends Frame {
 	}
 	
 	private void connect() {
+		if (channelInitializer == null) {
+			channelInitializer = new ClientChannelInitializer(this);
+		}
 		b.group(workers)
 		 .channel(NioSocketChannel.class)
 		 .handler(channelInitializer);
@@ -72,5 +75,10 @@ public class ClientFrame extends Frame {
 	public static void main(String[] args) {
 		new ClientFrame();
 	}
+	
+	public TextArea getTextArea() {
+		return textArea;
+	}
+	
 	
 }

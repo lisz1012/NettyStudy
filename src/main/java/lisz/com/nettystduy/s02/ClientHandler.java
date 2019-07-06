@@ -8,6 +8,12 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
+	private ClientFrame cf;
+	
+	public ClientHandler(ClientFrame cf) {
+		this.cf = cf;
+	}
+
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("Connected to server");
@@ -22,10 +28,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				String id = ((ByteBuf) msg).toString(CharsetUtil.UTF_8);
 				System.out.println("ID assigned: " + id);
 				ClientFrame.id = id;
-				ClientFrame.TEXT_AREA.setText("You (ID: " + ClientFrame.id + ") have connected to Wechat server, have fun!\n");
+				cf.getTextArea().setText("You (ID: " + ClientFrame.id + ") have connected to Wechat server, have fun!\n");
 			} else {
 				ByteBuf buf = (ByteBuf)msg;
-				ClientFrame.TEXT_AREA.setText(ClientFrame.TEXT_AREA.getText() + "\n" + buf.toString(CharsetUtil.UTF_8));
+				cf.getTextArea().setText(cf.getTextArea().getText() + "\n" + buf.toString(CharsetUtil.UTF_8));
 			}
 		} finally {
 			ReferenceCountUtil.release(msg);

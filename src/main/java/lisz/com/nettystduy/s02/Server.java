@@ -20,12 +20,11 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class Server extends Frame {
+	private static final long serialVersionUID = -2789470537819312371L;
 	private static final ChannelGroup CLIENTS = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	public static final TextArea TEXT_AREA = new TextArea();
 	

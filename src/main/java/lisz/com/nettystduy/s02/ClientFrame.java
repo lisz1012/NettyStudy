@@ -28,9 +28,10 @@ public class ClientFrame extends Frame {
 	private Bootstrap b = new Bootstrap();
 	private ChannelInitializer<SocketChannel> channelInitializer = new ClientChannelInitializer();
 	private ChannelFuture f;
+	//public static final ClientFrame INSTANCE = new ClientFrame(); 
 	
 	public ClientFrame() {
-		setSize(600, 400);
+		setSize(250, 400);
 		setLocation(100, 20);
 		add(TEXT_AREA, BorderLayout.CENTER);
 		add(TEXT_FIELD, BorderLayout.SOUTH);
@@ -38,9 +39,9 @@ public class ClientFrame extends Frame {
 		TEXT_FIELD.addActionListener(new ActionListener() { // ActionListener在回车的时候会触发下面actionPerformed里面的语句
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ByteBuf buf = Unpooled.copiedBuffer(TEXT_FIELD.getText().getBytes());
+				ByteBuf buf = Unpooled.copiedBuffer(("[" + ClientFrame.id + "]: " + TEXT_FIELD.getText()).getBytes());
 				f.channel().writeAndFlush(buf);
-				TEXT_AREA.setText(TEXT_AREA.getText() + "\n" + TEXT_FIELD.getText());
+				//TEXT_AREA.setText(TEXT_AREA.getText() + "\n[" + id + "]: " + TEXT_FIELD.getText());
 				TEXT_FIELD.setText("");
 			}
 		});

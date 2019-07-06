@@ -48,7 +48,7 @@ public class Server {
 	private static final class ServerHandler extends ChannelInboundHandlerAdapter {
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			System.out.println("A client just connected to server. Assigning it the ID: " + CLIENTS.size());
+			System.out.println("This is server, a client just connected to server. Assigning it the ID: " + CLIENTS.size());
 			ByteBuf buf = Unpooled.copiedBuffer((CLIENTS.size() + "").getBytes());
 			ctx.writeAndFlush(buf);
 		}
@@ -56,7 +56,7 @@ public class Server {
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			ByteBuf buf = (ByteBuf)msg;
-			System.out.println(buf.toString(CharsetUtil.UTF_8));
+			System.out.println("Server received: " + buf.toString(CharsetUtil.UTF_8));
 			CLIENTS.writeAndFlush(msg);
 		}
 		

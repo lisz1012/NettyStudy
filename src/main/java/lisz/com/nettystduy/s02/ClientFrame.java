@@ -38,7 +38,7 @@ public class ClientFrame extends Frame {
 		TEXT_FIELD.addActionListener(new ActionListener() { // ActionListener在回车的时候会触发下面actionPerformed里面的语句
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ByteBuf buf = Unpooled.copiedBuffer((TEXT_FIELD.getText() + "$_").getBytes());
+				ByteBuf buf = Unpooled.copiedBuffer(TEXT_FIELD.getText().getBytes());
 				f.channel().writeAndFlush(buf);
 				TEXT_AREA.setText(TEXT_AREA.getText() + "\n" + TEXT_FIELD.getText());
 				TEXT_FIELD.setText("");

@@ -1,7 +1,9 @@
 package lisz.com.nettystduy.s02;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
@@ -13,7 +15,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		try {
-			String id = (String) msg;
+			String id = ((ByteBuf)msg).toString(CharsetUtil.UTF_8);
 			System.out.println("ID assigned: " + id);
 			ClientFrame.id = id;
 		} finally {

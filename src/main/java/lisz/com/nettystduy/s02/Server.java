@@ -30,11 +30,7 @@ public class Server {
 		 .childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ByteBuf buf = Unpooled.copiedBuffer("$_".getBytes());
-				ch.pipeline()
-				  .addLast(new DelimiterBasedFrameDecoder(256, buf))
-				  .addLast(new StringDecoder())
-				  .addLast(new ServerHandler());
+				ch.pipeline().addLast(new ServerHandler());
 				CLIENTS.add(ch);
 			}
 		});
@@ -53,14 +49,14 @@ public class Server {
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
 			System.out.println("A client just connected to server. Assigning it the ID: " + CLIENTS.size());
-			ByteBuf buf = Unpooled.copiedBuffer((CLIENTS.size() + "$_").getBytes());
+			ByteBuf buf = Unpooled.copiedBuffer((CLIENTS.size() + "").getBytes());
 			ctx.writeAndFlush(buf);
 		}
 		
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-			String str = (String)msg;
-			System.out.println(str);
+			ByteBuf buf = (ByteBuf)msg;
+			System.out.println(buf.toString(CharsetUtil.UTF_8));
 			CLIENTS.writeAndFlush(msg);
 		}
 		

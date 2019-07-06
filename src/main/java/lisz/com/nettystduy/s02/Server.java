@@ -1,5 +1,11 @@
 package lisz.com.nettystduy.s02;
 
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.TextArea;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -19,10 +25,31 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-public class Server {
+public class Server extends Frame {
 	private static final ChannelGroup CLIENTS = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+	public static final TextArea TEXT_AREA = new TextArea();
+	
+	public Server() {
+		setSize(370, 650);
+		setLocation(800, 20);
+		add(TEXT_AREA, BorderLayout.CENTER);
+		TEXT_AREA.setEditable(false);
+		setVisible(true);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+	}
+	
+	private void display(String str) {
+		System.out.println(str);
+		TEXT_AREA.setText(TEXT_AREA.getText() + "\n" + str);
+	}
 	
 	public static void main(String[] args) {
+		Server server = new Server();
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		ServerBootstrap b = new ServerBootstrap();
@@ -31,7 +58,7 @@ public class Server {
 		 .childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new ServerHandler());
+				ch.pipeline().addLast(new ServerHandler(server));
 				CLIENTS.add(ch);
 			}
 		});
@@ -47,9 +74,16 @@ public class Server {
 	}
 
 	private static final class ServerHandler extends ChannelInboundHandlerAdapter {
+		private Server server;
+		
+		public ServerHandler(Server server) {
+			this.server = server;
+		}
+
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			System.out.println("This is server, a client just connected to server. Assigning it the ID: " + CLIENTS.size());
+			String str = "This is server, a client just connected to server. Assigning it the ID: " + CLIENTS.size();
+			server.display(str);
 			ByteBuf buf = Unpooled.copiedBuffer((CLIENTS.size() + "").getBytes());
 			ctx.writeAndFlush(buf);
 		}
@@ -57,7 +91,8 @@ public class Server {
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			ByteBuf buf = (ByteBuf)msg;
-			System.out.println("Server received: " + buf.toString(CharsetUtil.UTF_8));
+			String str = "Server received: " + buf.toString(CharsetUtil.UTF_8);
+			server.display(str);
 			CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));
 		}
 		

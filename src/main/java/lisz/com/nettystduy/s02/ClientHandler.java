@@ -1,0 +1,35 @@
+package lisz.com.nettystduy.s02;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
+
+public class ClientHandler extends ChannelInboundHandlerAdapter {
+	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		System.out.println("Connected to server");
+	}
+	
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		try {
+			String id = (String) msg;
+			System.out.println("ID assigned: " + id);
+			ClientFrame.id = id;
+		} finally {
+			ReferenceCountUtil.release(msg);
+		}
+	}
+	
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		ctx.close();
+		cause.printStackTrace();
+	}
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		System.out.println("Server offline or disconnected.");
+		ctx.close();
+	}
+}

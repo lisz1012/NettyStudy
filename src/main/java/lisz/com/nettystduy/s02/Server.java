@@ -9,6 +9,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.ChannelMatchers;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -57,7 +58,7 @@ public class Server {
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			ByteBuf buf = (ByteBuf)msg;
 			System.out.println("Server received: " + buf.toString(CharsetUtil.UTF_8));
-			CLIENTS.writeAndFlush(msg);
+			CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));
 		}
 		
 		@Override

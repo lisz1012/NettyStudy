@@ -31,7 +31,7 @@ public class ClientFrame extends Frame {
 	//public static final ClientFrame INSTANCE = new ClientFrame(); 
 	
 	public ClientFrame() {
-		setSize(250, 400);
+		setSize(370, 470);
 		setLocation(100, 20);
 		add(TEXT_AREA, BorderLayout.CENTER);
 		add(TEXT_FIELD, BorderLayout.SOUTH);
@@ -41,7 +41,7 @@ public class ClientFrame extends Frame {
 			public void actionPerformed(ActionEvent e) {
 				ByteBuf buf = Unpooled.copiedBuffer(("[" + ClientFrame.id + "]: " + TEXT_FIELD.getText()).getBytes());
 				f.channel().writeAndFlush(buf);
-				//TEXT_AREA.setText(TEXT_AREA.getText() + "\n[" + id + "]: " + TEXT_FIELD.getText());
+				TEXT_AREA.setText(TEXT_AREA.getText() + "\n[" + id + "]: " + TEXT_FIELD.getText());
 				TEXT_FIELD.setText("");
 			}
 		});

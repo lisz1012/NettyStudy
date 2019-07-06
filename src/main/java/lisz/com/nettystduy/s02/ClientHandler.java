@@ -11,8 +11,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("Connected to server");
-		//ByteBuf buf = Unpooled.copiedBuffer("A new client connected to server\n".getBytes());
-		//ctx.writeAndFlush(buf);
+		ByteBuf buf = Unpooled.copiedBuffer("A new client connected to server\n".getBytes());
+		ctx.writeAndFlush(buf);
 	}
 	
 	@Override
@@ -22,7 +22,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				String id = ((ByteBuf) msg).toString(CharsetUtil.UTF_8);
 				System.out.println("ID assigned: " + id);
 				ClientFrame.id = id;
-				//ClientFrame.TEXT_AREA.setText("You(ID: " + ClientFrame.id + ") have connected to Wechat server, have fun!\n");
+				ClientFrame.TEXT_AREA.setText("You (ID: " + ClientFrame.id + ") have connected to Wechat server, have fun!\n");
 			} else {
 				ByteBuf buf = (ByteBuf)msg;
 				ClientFrame.TEXT_AREA.setText(ClientFrame.TEXT_AREA.getText() + "\n" + buf.toString(CharsetUtil.UTF_8));

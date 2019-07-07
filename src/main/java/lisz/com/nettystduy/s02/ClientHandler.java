@@ -18,8 +18,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	}
 	
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		try {
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {//ctx代表Channel目前运行的网络环境
+		try {																		//客户端和服务器是一个通道的两端，就好比两个手机通话
 			if (ClientFrame.id == null) {
 				String id = ((ByteBuf) msg).toString(CharsetUtil.UTF_8);
 				System.out.println("ID assigned: " + id);

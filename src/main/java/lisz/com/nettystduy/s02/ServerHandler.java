@@ -8,16 +8,11 @@ import io.netty.channel.group.ChannelMatchers;
 import io.netty.util.CharsetUtil;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
-	private ServerFrame sf;
-	
-	public ServerHandler(ServerFrame sf) {
-		this.sf = sf;
-	}
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		String str = "This is server, a client just connected to server. Assigning it the ID: " + Server.CLIENTS.size();
-		sf.display(str);
+		ServerFrame.INSTANCE.display(str);
 		ByteBuf buf = Unpooled.copiedBuffer((Server.CLIENTS.size() + "").getBytes());
 		ctx.writeAndFlush(buf);
 	}
@@ -32,7 +27,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		String str = "Server received: " + message;
-		sf.display(str);
+		ServerFrame.INSTANCE.display(str);
 		Server.CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));//不要回发给发消息过来的那个client
 	}
 	

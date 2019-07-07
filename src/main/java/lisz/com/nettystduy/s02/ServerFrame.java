@@ -8,9 +8,10 @@ import java.awt.event.WindowEvent;
 
 public class ServerFrame extends Frame {
 	private static final long serialVersionUID = -2789470537819312371L;
+	public static final ServerFrame INSTANCE = new ServerFrame();
 	private TextArea textArea = new TextArea();
 	
-	public ServerFrame() {
+	private ServerFrame() {
 		setSize(370, 650);
 		setLocation(800, 20);
 		add(textArea, BorderLayout.CENTER);
@@ -30,7 +31,7 @@ public class ServerFrame extends Frame {
 	}
 	
 	public static void main(String[] args) {
-		ServerFrame sf = new ServerFrame();
-		Server.getInstance(sf).run();
+		//ServerFrame sf = new ServerFrame();
+		Server.getInstance().run();
 	}
 }

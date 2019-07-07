@@ -28,7 +28,7 @@ public class ClientFrame extends Frame {
 		textField.addActionListener(new ActionListener() { // ActionListener在回车的时候会触发下面actionPerformed里面的语句
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String msg = "[" + ClientFrame.id + "]: " + textField.getText();
+				String msg = "[" + ClientFrame.id + "]: " + textField.getText(); // 在聊天窗口输入"_bye_"不会关闭，因为有前缀
 				client.send(msg);
 				textArea.setText(textArea.getText() + System.getProperty("line.separator") + msg);
 				textField.setText("");

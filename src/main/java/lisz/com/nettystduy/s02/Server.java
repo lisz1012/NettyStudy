@@ -13,10 +13,8 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class Server {
 	public static final ChannelGroup CLIENTS = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-	private ServerFrame sf;
 	
-	public static Server getInstance(ServerFrame sf) {
-		Inner.SERVER.sf = sf;
+	public static Server getInstance() {
 		return Inner.SERVER;
 	}
 	
@@ -29,7 +27,7 @@ public class Server {
 		 .childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new ServerHandler(sf));
+				ch.pipeline().addLast(new ServerHandler());
 				CLIENTS.add(ch);
 			}
 		});

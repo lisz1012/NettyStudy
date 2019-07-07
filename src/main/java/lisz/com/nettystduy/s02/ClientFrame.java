@@ -13,7 +13,7 @@ public class ClientFrame extends Frame {
 	private static final long serialVersionUID = 8851447650164397784L;
 	private TextArea textArea = new TextArea();
 	private TextField textField = new TextField();
-	public static String id;
+	public static String id;  //运行程序的时候会首先起一个JVM虚拟机，所以启动多个客户端他们的Class类对象也是不同的，这个id也会不一样
 	public static final ClientFrame INSTANCE = new ClientFrame();
 	
 	private ClientFrame() {}

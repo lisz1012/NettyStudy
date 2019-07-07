@@ -12,13 +12,12 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client {
 	private EventLoopGroup workers = new NioEventLoopGroup(1);
-	private ClientFrame cf;
 	private ChannelFuture f;// 老马代码里是个Channel,只要跟server的连着，Channel就不会断。如果意外出现断了的话
 							// server会收到异常，如果server断了客户端会调用channelInactive Channel和ChannelHandlerContext
 							// 都是调用了ChannelInboundInvoker接口下的writeAndFlush方法发送消息
 	public void connect() {
 		Bootstrap b = new Bootstrap();
-		ChannelInitializer<SocketChannel> channelInitializer = new ClientChannelInitializer(cf);
+		ChannelInitializer<SocketChannel> channelInitializer = new ClientChannelInitializer();
 		
 		b.group(workers)
 		 .channel(NioSocketChannel.class)
@@ -41,10 +40,7 @@ public class Client {
 		f.channel().writeAndFlush(buf);
 	}
 	
-	public static Client getInstance(ClientFrame cf) {
-		if (Inner.CLIENT.cf == null) {
-			Inner.CLIENT.cf = cf;
-		}
+	public static Client getInstance() {
 		return Inner.CLIENT;
 	}
 	

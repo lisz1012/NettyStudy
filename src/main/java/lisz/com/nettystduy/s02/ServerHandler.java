@@ -27,6 +27,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		ByteBuf buf = (ByteBuf)msg;
 		String message = buf.toString(CharsetUtil.UTF_8);
 		if (ProtocolMessage.CLOSE.getMessage().equals(message)) {
+			System.out.println("A client is disconnecting...");
 			cleanUpChannel(ctx);
 			return;
 		}

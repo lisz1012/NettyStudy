@@ -79,7 +79,8 @@ public class Server {
 		
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-			ctx.close();
+			CLIENTS.remove(ctx.channel());
+			ctx.close(); //ctx关闭，里面的Channel也就关闭了
 			cause.printStackTrace();
 		}
 	}

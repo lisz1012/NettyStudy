@@ -1,11 +1,5 @@
 package lisz.com.nettystduy.s02;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.awt.TextArea;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -23,32 +17,16 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-public class Server extends Frame {
-	private static final long serialVersionUID = -2789470537819312371L;
+public class Server {
 	private static final ChannelGroup CLIENTS = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-	private TextArea textArea = new TextArea();
+	private ServerFrame sf;
 	
-	public Server() {
-		setSize(370, 650);
-		setLocation(800, 20);
-		add(textArea, BorderLayout.CENTER);
-		textArea.setEditable(false);
-		setVisible(true);
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
+	public static Server getInstance(ServerFrame sf) {
+		Inner.SERVER.sf = sf;
+		return Inner.SERVER;
 	}
 	
-	private void display(String str) {
-		System.out.println(str);
-		textArea.setText(textArea.getText() + "\n" + str);
-	}
-	
-	public static void main(String[] args) {
-		Server server = new Server();
+	public void run() {
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		ServerBootstrap b = new ServerBootstrap();
@@ -57,7 +35,7 @@ public class Server extends Frame {
 		 .childHandler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new ServerHandler(server));
+				ch.pipeline().addLast(new ServerHandler(sf));
 				CLIENTS.add(ch);
 			}
 		});
@@ -71,18 +49,22 @@ public class Server extends Frame {
 			workerGroup.shutdownGracefully();
 		}
 	}
-
+	
+	private static final class Inner {
+		private static final Server SERVER = new Server();
+	}
+	
 	private static final class ServerHandler extends ChannelInboundHandlerAdapter {
-		private Server server;
+		private ServerFrame sf;
 		
-		public ServerHandler(Server server) {
-			this.server = server;
+		public ServerHandler(ServerFrame sf) {
+			this.sf = sf;
 		}
 
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
 			String str = "This is server, a client just connected to server. Assigning it the ID: " + CLIENTS.size();
-			server.display(str);
+			sf.display(str);
 			ByteBuf buf = Unpooled.copiedBuffer((CLIENTS.size() + "").getBytes());
 			ctx.writeAndFlush(buf);
 		}
@@ -91,7 +73,7 @@ public class Server extends Frame {
 		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 			ByteBuf buf = (ByteBuf)msg;
 			String str = "Server received: " + buf.toString(CharsetUtil.UTF_8);
-			server.display(str);
+			sf.display(str);
 			CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));
 		}
 		

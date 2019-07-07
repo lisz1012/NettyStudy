@@ -74,7 +74,7 @@ public class Server {
 			ByteBuf buf = (ByteBuf)msg;
 			String str = "Server received: " + buf.toString(CharsetUtil.UTF_8);
 			sf.display(str);
-			CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));
+			CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));//不要回发给发消息过来的那个client
 		}
 		
 		@Override

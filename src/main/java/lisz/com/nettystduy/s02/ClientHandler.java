@@ -28,10 +28,12 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				String id = ((ByteBuf) msg).toString(CharsetUtil.UTF_8);
 				System.out.println("ID assigned: " + id);
 				ClientFrame.id = id;
-				cf.getTextArea().setText("You (ID: " + ClientFrame.id + ") have connected to Wechat server, have fun!\n");
+				cf.getTextArea().setText("You (ID: " + ClientFrame.id + ") have connected to Wechat server, have fun!" + 
+						System.getProperty("line.separator"));
 			} else {
 				ByteBuf buf = (ByteBuf)msg;
-				cf.getTextArea().setText(cf.getTextArea().getText() + "\n" + buf.toString(CharsetUtil.UTF_8));
+				cf.getTextArea().setText(cf.getTextArea().getText() + System.getProperty("line.separator")
+					+ buf.toString(CharsetUtil.UTF_8));
 			}
 		} finally {
 			ReferenceCountUtil.release(msg);

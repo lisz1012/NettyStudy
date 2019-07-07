@@ -30,7 +30,7 @@ public class ClientFrame extends Frame {
 			public void actionPerformed(ActionEvent e) {
 				String msg = "[" + ClientFrame.id + "]: " + textField.getText();
 				client.send(msg);
-				textArea.setText(textArea.getText() + "\n" + msg);
+				textArea.setText(textArea.getText() + System.getProperty("line.separator") + msg);
 				textField.setText("");
 			}
 		});

@@ -32,6 +32,10 @@ public class Client {
 		}
 	}
 	
+	public void closeConnection() {
+		send("_bye_");
+	}
+	
 	public void send(String msg) {
 		if (f == null) {
 			return;

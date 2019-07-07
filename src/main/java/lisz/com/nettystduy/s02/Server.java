@@ -26,13 +26,13 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 public class Server extends Frame {
 	private static final long serialVersionUID = -2789470537819312371L;
 	private static final ChannelGroup CLIENTS = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-	public static final TextArea TEXT_AREA = new TextArea();
+	private TextArea textArea = new TextArea();
 	
 	public Server() {
 		setSize(370, 650);
 		setLocation(800, 20);
-		add(TEXT_AREA, BorderLayout.CENTER);
-		TEXT_AREA.setEditable(false);
+		add(textArea, BorderLayout.CENTER);
+		textArea.setEditable(false);
 		setVisible(true);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -44,7 +44,7 @@ public class Server extends Frame {
 	
 	private void display(String str) {
 		System.out.println(str);
-		TEXT_AREA.setText(TEXT_AREA.getText() + "\n" + str);
+		textArea.setText(textArea.getText() + "\n" + str);
 	}
 	
 	public static void main(String[] args) {

@@ -12,23 +12,26 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		String str = "This is server, a client just connected to server. Assigning it the ID: " + Server.CLIENTS.size();
-		ServerFrame.INSTANCE.display(str);
+		ServerFrame.INSTANCE.updateServerMessage(str);
 		ByteBuf buf = Unpooled.copiedBuffer((Server.CLIENTS.size() + "").getBytes());
 		ctx.writeAndFlush(buf);
 	}
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		ByteBuf buf = (ByteBuf)msg;
+		/*ByteBuf buf = (ByteBuf)msg;
 		String message = buf.toString(CharsetUtil.UTF_8);
 		if (ProtocolMessage.CLOSE.getMessage().equals(message)) {
-			System.out.println("A client is disconnecting...");
+			ServerFrame.INSTANCE.updateServerMessage("A client is disconnecting...");
 			cleanUpChannel(ctx);
 			return;
 		}
 		String str = "Server received: " + message;
-		ServerFrame.INSTANCE.display(str);
+		ServerFrame.INSTANCE.updateClientMessage(str);
 		Server.CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));//不要回发给发消息过来的那个client
+		*/
+		String message = ((TankMessage)msg).toString();
+		System.out.println(message);
 	}
 	
 	@Override

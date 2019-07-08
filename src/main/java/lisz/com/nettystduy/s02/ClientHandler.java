@@ -13,8 +13,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("Connected to server");
-		ByteBuf buf = Unpooled.copiedBuffer("A new client connected to server\n".getBytes());
-		ctx.writeAndFlush(buf);
+		/*ByteBuf buf = Unpooled.copiedBuffer("A new client connected to server\n".getBytes());
+		ctx.writeAndFlush(buf);*/
+		TankMessage tankMessage = new TankMessage(50, 60);
+		ctx.writeAndFlush(tankMessage);
 	}
 	
 	@Override

@@ -34,17 +34,18 @@ public class ServerFrame extends Frame {
 		});
 	}
 	
-	public void display(String str) {
-		System.out.println(str);
-		serverTextArea.setText(serverTextArea.getText() + "\n" + str);
-	}
-	
 	public static void main(String[] args) {
 		INSTANCE.setVisible(true);
-		Server.getInstance().run(); // 在主线程里启动，就不会有阻塞UI，各种按钮不管用的问题了
+		Server.getInstance().run(); // 在主线程里启动，就不会阻塞UI线程，各种按钮不管用的问题了.UI线程跟主线程是两个线程
 	}
 	
 	public void updateServerMessage(String msg) {
+		System.out.println(msg);
 		serverTextArea.setText(serverTextArea.getText() + System.getProperty("line.separator") + msg);
+	}
+	
+	public void updateClientMessage(String msg) {
+		System.out.println(msg);
+		clientTextArea.setText(clientTextArea.getText() + System.getProperty("line.separator") + msg);
 	}
 }

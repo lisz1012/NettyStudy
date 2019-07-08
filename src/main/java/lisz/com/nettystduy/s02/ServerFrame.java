@@ -12,14 +12,12 @@ import java.awt.event.WindowEvent;
 public class ServerFrame extends Frame {
 	private static final long serialVersionUID = -2789470537819312371L;
 	public static final ServerFrame INSTANCE = new ServerFrame();
-	private Button btnStart = new Button("Start");
 	private TextArea serverTextArea = new TextArea();
 	private TextArea clientTextArea = new TextArea();
 	
 	private ServerFrame() {
 		setSize(1600, 600);
 		setLocation(300, 30);
-		add(btnStart, BorderLayout.NORTH);
 		Panel p = new Panel(new GridLayout(1, 2));
 		p.add(serverTextArea);
 		p.add(clientTextArea);

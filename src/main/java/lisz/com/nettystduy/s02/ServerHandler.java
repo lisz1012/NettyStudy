@@ -19,7 +19,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		/*ByteBuf buf = (ByteBuf)msg;
+		ByteBuf buf = (ByteBuf)msg;
 		String message = buf.toString(CharsetUtil.UTF_8);
 		if (ProtocolMessage.CLOSE.getMessage().equals(message)) {
 			ServerFrame.INSTANCE.updateServerMessage("A client is disconnecting...");
@@ -29,9 +29,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		String str = "Server received: " + message;
 		ServerFrame.INSTANCE.updateClientMessage(str);
 		Server.CLIENTS.writeAndFlush(msg, ChannelMatchers.isNot(ctx.channel()));//不要回发给发消息过来的那个client
-		*/
-		String message = ((TankMessage)msg).toString();
-		System.out.println(message);
 	}
 	
 	@Override

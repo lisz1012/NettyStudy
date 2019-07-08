@@ -1,4 +1,4 @@
-package lisz.com.NettyStudy;
+package lisz.com.nettystudy;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;

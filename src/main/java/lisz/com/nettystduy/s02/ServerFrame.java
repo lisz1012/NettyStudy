@@ -6,8 +6,6 @@ import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.TextArea;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -34,13 +32,6 @@ public class ServerFrame extends Frame {
 				System.exit(0);
 			}
 		});
-		btnStart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new Thread(()->{
-					Server.getInstance().run();}).start();
-			}
-		});
 	}
 	
 	public void display(String str) {
@@ -49,9 +40,8 @@ public class ServerFrame extends Frame {
 	}
 	
 	public static void main(String[] args) {
-		//ServerFrame sf = new ServerFrame();
-		//Server.getInstance().run();
 		INSTANCE.setVisible(true);
+		Server.getInstance().run(); // 在主线程里启动，就不会有阻塞UI，各种按钮不管用的问题了
 	}
 	
 	public void updateServerMessage(String msg) {
